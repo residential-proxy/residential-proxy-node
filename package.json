@@ -1,0 +1,37 @@
+{
+  "name": "residential-proxy-sdk",
+  "version": "1.0.4",
+  "description": "ProxySDK là một giải pháp proxy xoay dân cư tiêu chuẩn cho các dự án tại Việt Nam, đặc biệt phù hợp cho các dự án MMO và Airdrop.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/residential-proxy/residential-proxy-node"
+  },
+  "main": "dist/index.js",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'No tests specified' && exit 0",
+    "publish": "npm publish"
+  },
+  "keywords": [
+    "proxy",
+    "sdk",
+    "api",
+    "vietnam",
+    "mmo",
+    "airdrop"
+  ],
+  "author": "Nathan",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "axios": "^0.21.4"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.0"
+  }
+}
