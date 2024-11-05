@@ -1,4 +1,24 @@
 import axios, { AxiosInstance } from "axios";
+import {
+  RegisterDto,
+  RegisterResponse,
+  LoginDto,
+  LoginResponse,
+  ForgotPasswordResponse,
+  ResetPasswordDto,
+  ResetPasswordResponse,
+  BuyKeyDto,
+  RenewKeyDto,
+  WWProxyKey,
+} from "./interfaces";
+
+import {
+  Provinces,
+  ProxyIPDTO,
+  ProxyKeysDTO,
+  Users,
+  Proxy_Keys,
+} from "./types";
 
 class ProxySDK {
   private client: AxiosInstance;
@@ -13,69 +33,175 @@ class ProxySDK {
     });
   }
 
-  async getProvinces(searchText?: string) {
-    const response = await this.client.get("/api/client/provinces", {
-      params: { search_text: searchText },
-    });
-    return response.data;
+  async register(registerDto: RegisterDto): Promise<RegisterResponse> {
+    try {
+      const response = await this.client.post<RegisterResponse>(
+        "/api/client/register",
+        registerDto
+      );
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Registration failed");
+    }
   }
 
-  async getNewIP(proxyKey: string, provinceId?: number) {
-    const response = await this.client.get("/api/client/proxy/available", {
-      params: { proxy_key: proxyKey, province_id: provinceId },
-    });
-    return response.data;
+  async login(loginDto: LoginDto): Promise<LoginResponse> {
+    try {
+      const response = await this.client.post<LoginResponse>(
+        "/api/client/login",
+        loginDto
+      );
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Login failed");
+    }
   }
 
-  async getCurrentIP(proxyKey: string) {
-    const response = await this.client.get("/api/client/proxy/current", {
-      params: { proxy_key: proxyKey },
-    });
-    return response.data;
+  async forgotPassword(email: string): Promise<ForgotPasswordResponse> {
+    try {
+      const response = await this.client.post<ForgotPasswordResponse>(
+        "/api/client/forgot-password",
+        { email }
+      );
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(
+        errorResponse.message || "Failed to process forgot password request"
+      );
+    }
   }
 
-  async removeOldIP(proxyKey: string) {
-    const response = await this.client.post("/api/client/proxy/remove", {
-      proxy_key: proxyKey,
-    });
-    return response.data;
+  async resetPassword(
+    resetPasswordDto: ResetPasswordDto
+  ): Promise<ResetPasswordResponse> {
+    try {
+      const response = await this.client.post<ResetPasswordResponse>(
+        "/api/client/reset-password",
+        resetPasswordDto
+      );
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to reset password");
+    }
   }
 
-  async getKeyList() {
-    const response = await this.client.get("/api/client/key/list");
-    return response.data;
+  async getProvinces(searchText?: string): Promise<Provinces[]> {
+    try {
+      const response = await this.client.get("/api/client/provinces", {
+        params: { search_text: searchText },
+      });
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to get provinces");
+    }
   }
 
-  async getKeyDetail(proxyKey: string) {
-    const response = await this.client.get("/api/client/key/detail", {
-      params: { proxy_key: proxyKey },
-    });
-    return response.data;
+  async getNewIP(proxyKey: string, provinceId?: number): Promise<ProxyIPDTO> {
+    try {
+      const response = await this.client.get("/api/client/proxy/available", {
+        params: { proxy_key: proxyKey, province_id: provinceId },
+      });
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to get new IP");
+    }
   }
 
-  async buyNewKey(buyKeyDto: any) {
-    const response = await this.client.post("/api/client/key/buy", buyKeyDto);
-    return response.data;
+  async getCurrentIP(proxyKey: string): Promise<ProxyIPDTO> {
+    try {
+      const response = await this.client.get("/api/client/proxy/current", {
+        params: { proxy_key: proxyKey },
+      });
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to get current IP");
+    }
   }
 
-  async renewKey(renewKeyDto: any) {
-    const response = await this.client.post(
-      "/api/client/key/renewal",
-      renewKeyDto
-    );
-    return response.data;
+  async removeOldIP(proxyKey: string): Promise<boolean> {
+    try {
+      const response = await this.client.post("/api/client/proxy/remove", {
+        proxy_key: proxyKey,
+      });
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to remove old IP");
+    }
   }
 
-  async removeKey(proxyKey: string) {
-    const response = await this.client.post("/api/client/key/remove", {
-      proxy_key: proxyKey,
-    });
-    return response.data;
+  async getKeyList(): Promise<ProxyKeysDTO[]> {
+    try {
+      const response = await this.client.get("/api/client/key/list");
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to get key list");
+    }
   }
 
-  async getUserInfo() {
-    const response = await this.client.get("/api/client/user/current");
-    return response.data;
+  async getKeyDetail(proxyKey: string): Promise<WWProxyKey> {
+    try {
+      const response = await this.client.get("/api/client/key/detail", {
+        params: { proxy_key: proxyKey },
+      });
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to get key detail");
+    }
+  }
+
+  async buyNewKey(buyKeyDto: BuyKeyDto): Promise<Proxy_Keys[]> {
+    try {
+      const response = await this.client.post("/api/client/key/buy", buyKeyDto);
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to buy new key");
+    }
+  }
+
+  async renewKey(renewKeyDto: RenewKeyDto): Promise<boolean> {
+    try {
+      const response = await this.client.post(
+        "/api/client/key/renewal",
+        renewKeyDto
+      );
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to renew key");
+    }
+  }
+
+  async removeKey(proxyKey: string): Promise<boolean> {
+    try {
+      const response = await this.client.post("/api/client/key/remove", {
+        proxy_key: proxyKey,
+      });
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to remove key");
+    }
+  }
+
+  async getUserInfo(): Promise<Users> {
+    try {
+      const response = await this.client.get("/api/client/user/current");
+      return response.data;
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      throw new Error(errorResponse.message || "Failed to get user info");
+    }
   }
 }
 

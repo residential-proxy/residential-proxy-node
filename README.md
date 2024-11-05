@@ -37,6 +37,36 @@ sdk.getProvinces().then((provinces) => {
 
 ProxySDK cung cấp các API sau:
 
+### Đăng ký tài khoản
+
+- **Phương thức**: `register(registerDto)`
+- **Tham số**:
+  - `email`: Email đăng ký
+  - `username`: Tên đăng nhập
+  - `password`: Mật khẩu
+
+### Đăng nhập
+
+- **Phương thức**: `login(loginDto)`
+- **Tham số**:
+  - `username`: Tên đăng nhập
+  - `password`: Mật khẩu
+
+### Quên mật khẩu
+
+- **Phương thức**: `forgotPassword(email: string)`
+- **Mô tả**: Gửi email chứa token để đặt lại mật khẩu
+- **Tham số**:
+  - `email`: Email đã đăng ký tài khoản
+
+### Đặt lại mật khẩu
+
+- **Phương thức**: `resetPassword(resetPasswordDto)`
+- **Mô tả**: Đặt lại mật khẩu mới bằng token đã nhận
+- **Tham số**:
+  - `token`: Token nhận được qua email
+  - `newPassword`: Mật khẩu mới
+
 ### Lấy danh sách tỉnh
 
 - **Phương thức**: `getProvinces(searchText?: string)`
@@ -80,17 +110,20 @@ ProxySDK cung cấp các API sau:
 
 ### Mua khóa mới
 
-- **Phương thức**: `buyNewKey(buyKeyDto: any)`
+- **Phương thức**: `buyNewKey(buyKeyDto)`
 - **Mô tả**: Thực hiện giao dịch mua khóa proxy mới.
 - **Tham số**:
-  - `buyKeyDto`: Đối tượng chứa thông tin mua khóa mới.
+  - `key_type`: Loại khóa ("VIP" | "NORMAL" | "ONE_HOUR")
+  - `quantity`: Số lượng (1-100)
+  - `days`: Số ngày (1-365)
 
 ### Gia hạn khóa
 
-- **Phương thức**: `renewKey(renewKeyDto: any)`
+- **Phương thức**: `renewKey(renewKeyDto)`
 - **Mô tả**: Gia hạn một khóa proxy hiện có.
 - **Tham số**:
-  - `renewKeyDto`: Đối tượng chứa thông tin gia hạn khóa.
+  - `key`: Khóa cần gia hạn
+  - `days`: Số ngày gia hạn (1-365)
 
 ### Xóa khóa
 
